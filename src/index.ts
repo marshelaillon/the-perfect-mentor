@@ -1,12 +1,14 @@
+import 'dotenv/config';
+import cors from 'cors';
 import express from 'express';
 
+const PORT = process.env.PORT || 3001;
+const corsOptions = { origin: ['http://localhost:5173'] };
 const app = express();
+
+// Middlewares
 app.use(express.json());
+app.use(cors(corsOptions));
 
-app.get('/', (_, res) => {
-  res.send('Testing my server!');
-});
-
-app.listen(3000, () => {
-  console.log('Listening on port: 3001');
-});
+// Server
+app.listen(PORT, () => console.log(`Listening on port: ${PORT}`));
