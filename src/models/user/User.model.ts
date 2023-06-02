@@ -61,7 +61,7 @@ export class User {
   language: string;
 
   @prop({ ref: () => Role })
-  rol: Ref<Role>;
+  role: Ref<Role>;
 
   async validatePassword(this: DocumentType<User>, candidatePassword: string) {
     try {
