@@ -4,9 +4,11 @@ import {
   modelOptions,
   pre,
   DocumentType,
+  Ref,
 } from '@typegoose/typegoose';
 import { nanoid } from 'nanoid';
 import argon2 from 'argon2';
+import { Role } from '../role/Role.model';
 
 @pre<User>('save', async function () {
   if (!this.isModified('password')) return;
@@ -57,6 +59,9 @@ export class User {
 
   @prop()
   language: string;
+
+  @prop({ ref: () => Role })
+  rol: Ref<Role>;
 
   async validatePassword(this: DocumentType<User>, candidatePassword: string) {
     try {

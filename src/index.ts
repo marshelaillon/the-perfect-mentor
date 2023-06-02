@@ -3,6 +3,7 @@ import connectDB from './config/database';
 import cors from 'cors';
 import express from 'express';
 import router from './routes';
+import morgan from 'morgan';
 
 const PORT = process.env.PORT || 3001;
 const corsOptions = { origin: ['http://localhost:5173'] };
@@ -11,6 +12,7 @@ const app = express();
 // Middlewares
 app.use(express.json());
 app.use(cors(corsOptions));
+app.use(morgan('dev'));
 
 app.use('/api', router);
 
