@@ -5,6 +5,7 @@ import {
   pre,
   DocumentType,
   Ref,
+  Severity,
 } from '@typegoose/typegoose';
 import { nanoid } from 'nanoid';
 import argon2 from 'argon2';
@@ -18,6 +19,9 @@ import { Role } from '../role/Role.model';
 @modelOptions({
   schemaOptions: {
     timestamps: true,
+  },
+  options: {
+    allowMixed: Severity.ALLOW,
   },
 })
 export class User {
@@ -40,6 +44,9 @@ export class User {
   verified: boolean;
 
   @prop()
+  passwordResetCode: string | null;
+
+  @prop({ default: undefined })
   name: string;
 
   @prop()
