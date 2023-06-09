@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(cors(corsOptions));
 app.use(morgan('dev'));
 
-app.use('/api', router);
+app.use('/api/v1', router);
 
 // Server
 app.listen(PORT, async () => {

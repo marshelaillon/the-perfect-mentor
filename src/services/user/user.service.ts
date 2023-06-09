@@ -5,5 +5,5 @@ export function createUser(input: Partial<User>) {
 }
 
 export function getUser(userId: string) {
-  return UserModel.findById(userId).select('+name').lean();
+  return UserModel.findById(userId).select('-password').lean();
 }
