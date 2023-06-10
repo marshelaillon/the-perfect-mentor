@@ -11,6 +11,15 @@ import { nanoid } from 'nanoid';
 import argon2 from 'argon2';
 import { Role } from '../role/Role.model';
 
+export const privateFields = [
+  'password',
+  '__v',
+  'verificationCode',
+  'passwordResetCode',
+  'verified',
+  'role',
+];
+
 @pre<User>('save', async function () {
   if (!this.isModified('password')) return;
   const hashedPassword = await argon2.hash(this.password);
@@ -27,9 +36,6 @@ import { Role } from '../role/Role.model';
 export class User {
   @prop({ unique: true, required: true, lowercase: true, trim: true })
   email: string;
-
-  @prop({ unique: true, required: true, lowercase: true, trim: true })
-  username: string;
 
   @prop({ required: true })
   password: string;

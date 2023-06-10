@@ -21,9 +21,6 @@ export const userRegisterSchema = object({
     email: string({
       required_error: 'email is required',
     }).email('Not a valid email'),
-    username: string({
-      required_error: 'username is required',
-    }),
     password: string({
       required_error: 'password is required',
     }).min(6, 'Password is too short - should be min 6 characters'),
@@ -43,4 +40,13 @@ export const userRegisterSchema = object({
   }),
 });
 
-export type UserRegisterData = TypeOf<typeof userRegisterSchema>['body'];
+export const verifyUserSchema = object({
+  params: object({
+    id: string(),
+    verificationCode: string(),
+  }),
+});
+
+export type UserRegisterInput = TypeOf<typeof userRegisterSchema>['body'];
+
+export type VerifyUserInput = TypeOf<typeof verifyUserSchema>['params'];

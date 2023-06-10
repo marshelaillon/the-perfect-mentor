@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import connectDB from './config/database';
+import connectDB from './utils/connectToDb';
 import cors from 'cors';
 import express from 'express';
 import router from './routes';
