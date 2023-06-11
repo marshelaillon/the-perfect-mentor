@@ -1,9 +1,5 @@
 import { Request, Response } from 'express';
-import {
-  createUser,
-  findUserById,
-  getUser,
-} from '../../services/user/user.service';
+import { createUser, findUserById } from '../../services/user/user.service';
 import {
   UserRegisterInput,
   VerifyUserInput,
@@ -60,13 +56,6 @@ export async function verifyUserHandler(
   return res.send('Could not verify user');
 }
 
-export async function getUserController(req: Request, res: Response) {
-  try {
-    const { id } = req.params;
-    const user = await getUser(id);
-    if (user) return res.json(user);
-    return res.status(404).send('User not found');
-  } catch (error) {
-    return res.status(500).send(error);
-  }
+export async function getCurrentUserHandler(_: Request, res: Response) {
+  return res.send(res.locals.user);
 }

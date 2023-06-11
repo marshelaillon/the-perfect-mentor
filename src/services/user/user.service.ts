@@ -9,9 +9,5 @@ export function findUserById(id: string) {
 }
 
 export function findUserByEmail(email: string) {
-  return UserModel.findOne({ email });
-}
-
-export function getUser(userId: string) {
-  return UserModel.findById(userId).select('-password').lean();
+  return UserModel.findOne({ email }).populate('role', '_id name');
 }

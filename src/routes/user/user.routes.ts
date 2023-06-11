@@ -6,11 +6,12 @@ import {
 } from '../../schema/user/user.schema';
 import {
   createUserController,
-  getUserController,
+  getCurrentUserHandler,
   verifyUserHandler,
 } from '../../controllers/user/user.controller';
 import { createSessionSchema } from '../../schema/user/auth.schema';
 import { createSessionHandler } from '../../controllers/user/auth.controller';
+import requireUser from '../../middlewares/requireUser';
 
 const router = Router();
 
@@ -22,6 +23,6 @@ router
     validateResource(verifyUserSchema),
     verifyUserHandler
   )
-  .get('/:id', getUserController);
+  .get('/me', requireUser, getCurrentUserHandler);
 
 export default router;

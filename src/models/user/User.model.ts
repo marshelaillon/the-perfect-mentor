@@ -17,7 +17,6 @@ export const privateFields = [
   'verificationCode',
   'passwordResetCode',
   'verified',
-  'role',
 ];
 
 @pre<User>('save', async function () {
