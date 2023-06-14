@@ -18,7 +18,7 @@ const router = Router();
 router
   .post('/', validateResource(userRegisterSchema), createUserController)
   .post('/login', validateResource(createSessionSchema), createSessionHandler)
-  .post(
+  .get(
     '/verify/:id/:verificationCode',
     validateResource(verifyUserSchema),
     verifyUserHandler

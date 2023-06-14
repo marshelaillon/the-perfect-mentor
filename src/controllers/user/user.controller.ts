@@ -14,21 +14,28 @@ export async function createUserController(
   try {
     const user = await createUser(userData);
 
-    await sendEmail({
-      from: 'test@example.com',
-      to: user.email,
-      subject: 'Please verify your account',
-      text: `VERIFICATION CODE: ${user.verificationCode}
-      ID: ${user._id}`,
-    });
+    if (user) {
+      const verificationUrl = `http://localhost:3001/api/v1/user/verify/${user._id}/${user.verificationCode}`;
 
-    return res.send('User successfully created');
-  } catch (error: any) {
-    console.log(error);
-    if (error.code === 11000) {
-      return res.status(409).send('Account already exists');
+      const url = await sendEmail({
+        from: 'test@example.com',
+        to: user.email,
+        subject: 'Please verify your account',
+        html: `
+        <h1>Please, verify your account</h1>
+        <p>Click the following link to verify your account:</p>
+        <a href="${verificationUrl}">Verify my account</a>
+        `,
+      });
+
+      return res.json({ ok: true, msg: 'User successfully created', url });
     }
-    return res.status(500).send(error);
+    return res.status(400).json({ ok: false, msg: 'Something went wrong' });
+  } catch (error: any) {
+    if (error.code === 11000) {
+      return res.status(409).json({ ok: false, msg: 'Account already exists' });
+    }
+    return res.status(500).send({ ok: false, msg: error.message });
   }
 }
 
