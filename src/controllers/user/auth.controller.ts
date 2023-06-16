@@ -15,7 +15,7 @@ export async function createSessionHandler(
 
   const user = await findUserByEmail(email);
 
-  if (!user) return res.status(401).json({ ok: false, msg: message });
+  if (!user) return res.status(404).json({ ok: false, msg: message });
   //if (!user.verified) return res.send('Please verify your email');
 
   const isValid = await user.validatePassword(password);
