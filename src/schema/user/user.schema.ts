@@ -12,6 +12,11 @@ const roles = [
   },
 ];
 
+const passwordRegex =
+  /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{8,}$/;
+
+const passwordMinLength = 8;
+
 function isValidRoleId(value: string) {
   return roles.some(role => role.id.equals(value));
 }
@@ -47,6 +52,36 @@ export const verifyUserSchema = object({
   }),
 });
 
+export const updateUserDataSchema = object({
+  body: object({
+    email: string().email('Not a valid email').optional(),
+    password: string()
+      .refine(value => passwordRegex.test(value), {
+        message:
+          'Password must contain at least one uppercase letter, one number, and one special character',
+      })
+      .refine(value => value.length >= passwordMinLength, {
+        message: `Password must be at least ${passwordMinLength} characters long`,
+      })
+      .optional(),
+    name: string().optional(),
+    lastname: string().optional(),
+    age: string().regex(/^\d+$/, 'Invalid age').optional(),
+    role: string()
+      .refine(isValidRoleId, {
+        message: 'Invalid role id',
+      })
+      .transform(value => new Types.ObjectId(value))
+      .optional(),
+    residence_country: string().optional(),
+    occupation: string().optional(),
+    description: string().optional(),
+    language: string().optional(),
+  }),
+});
+
 export type UserRegisterInput = TypeOf<typeof userRegisterSchema>['body'];
 
 export type VerifyUserInput = TypeOf<typeof verifyUserSchema>['params'];
+
+export type UserUpdateData = TypeOf<typeof updateUserDataSchema>['body'];

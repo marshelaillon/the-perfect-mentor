@@ -11,3 +11,10 @@ export function findUserById(id: string) {
 export function findUserByEmail(email: string) {
   return UserModel.findOne({ email }).populate('role', '_id name');
 }
+
+export function updateUser(id: string, newUserData: object) {
+  return UserModel.findOneAndUpdate({ _id: id }, newUserData, {
+    new: true,
+    runValidators: true,
+  });
+}

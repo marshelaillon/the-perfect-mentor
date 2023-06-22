@@ -1,7 +1,13 @@
 import { Request, Response } from 'express';
-import { createUser, findUserById } from '../../services/user/user.service';
+import { ParamsDictionary, Query } from 'express-serve-static-core';
+import {
+  createUser,
+  findUserById,
+  updateUser,
+} from '../../services/user/user.service';
 import {
   UserRegisterInput,
+  UserUpdateData,
   VerifyUserInput,
 } from '../../schema/user/user.schema';
 import sendEmail from '../../utils/mailer';
@@ -65,4 +71,26 @@ export async function verifyUserHandler(
 
 export async function getCurrentUserHandler(_: Request, res: Response) {
   return res.send(res.locals.user);
+}
+
+export async function updateUserController(
+  req: Request<ParamsDictionary, Query, UserUpdateData>,
+  res: Response
+) {
+  const userData = req.body;
+  const { id } = req.params;
+  try {
+    const updatedUser = await updateUser(id, userData);
+
+    if (updatedUser) {
+      return res.json({
+        ok: true,
+        msg: 'User successfully created',
+        data: updateUser,
+      });
+    }
+    return res.status(400).json({ ok: false, msg: 'Something went wrong' });
+  } catch (error: any) {
+    return res.status(500).send({ ok: false, msg: error.message });
+  }
 }
