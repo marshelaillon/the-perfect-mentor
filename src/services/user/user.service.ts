@@ -16,5 +16,5 @@ export function updateUser(id: string, newUserData: object) {
   return UserModel.findOneAndUpdate({ _id: id }, newUserData, {
     new: true,
     runValidators: true,
-  });
+  }).populate('role', '_id name');
 }

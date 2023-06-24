@@ -85,10 +85,10 @@ export async function updateUserController(
     if (updatedUser) {
       return res.json({
         ok: true,
-        msg: 'User successfully created',
-        data: updateUser,
+        msg: 'User successfully updated',
       });
     }
+
     return res.status(400).json({ ok: false, msg: 'Something went wrong' });
   } catch (error: any) {
     return res.status(500).send({ ok: false, msg: error.message });

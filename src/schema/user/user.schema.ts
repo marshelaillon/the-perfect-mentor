@@ -54,8 +54,9 @@ export const verifyUserSchema = object({
 
 export const updateUserDataSchema = object({
   body: object({
-    email: string().email('Not a valid email').optional(),
+    email: string().nonempty().email('Not a valid email').nonempty().optional(),
     password: string()
+      .nonempty()
       .refine(value => passwordRegex.test(value), {
         message:
           'Password must contain at least one uppercase letter, one number, and one special character',
@@ -64,19 +65,19 @@ export const updateUserDataSchema = object({
         message: `Password must be at least ${passwordMinLength} characters long`,
       })
       .optional(),
-    name: string().optional(),
-    lastname: string().optional(),
-    age: string().regex(/^\d+$/, 'Invalid age').optional(),
+    name: string().nonempty().optional(),
+    lastname: string().nonempty().optional(),
     role: string()
+      .nonempty('Age field cannot be empty')
       .refine(isValidRoleId, {
         message: 'Invalid role id',
       })
       .transform(value => new Types.ObjectId(value))
       .optional(),
-    residence_country: string().optional(),
-    occupation: string().optional(),
-    description: string().optional(),
-    language: string().optional(),
+    residence_country: string().nonempty().optional(),
+    occupation: string().nonempty().optional(),
+    description: string().nonempty().optional(),
+    language: string().nonempty().optional(),
   }),
 });
 
