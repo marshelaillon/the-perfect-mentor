@@ -1,10 +1,15 @@
 import { Request, Response } from 'express';
 import { CreateSessionInputSchema } from '../../schema/user/auth.schema';
-import { findUserByEmail } from '../../services/user/user.service';
 import {
+  findUserByEmail,
+  findUserById,
+} from '../../services/user/user.service';
+import {
+  findSessionById,
   signAccessToken,
   signRefreshToken,
 } from '../../services/user/auth.service';
+import { verifyJwt } from '../../utils/jwt';
 
 export async function createSessionHandler(
   req: Request<{}, {}, CreateSessionInputSchema>,
@@ -35,31 +40,40 @@ export async function createSessionHandler(
   });
 }
 
-// export async function refreshAccessTokenHandler(req: Request, res: Response) {
-//   const refreshToken = get(req, 'headers.x-refresh');
+export async function refreshAccessTokenHandler(req: Request, res: Response) {
+  const refreshToken = req.headers['x-refresh'];
+  let decoded;
 
-//   const decoded = verifyJwt<{ session: string }>(
-//     refreshToken,
-//     'refreshTokenPublicKey'
-//   );
+  if (refreshToken) {
+    decoded = verifyJwt<{ session: string }>(
+      refreshToken + '',
+      'refreshTokenPublicKey'
+    );
+  }
 
-//   if (!decoded) {
-//     return res.status(401).send('Could not refresh access token');
-//   }
+  if (!decoded) {
+    return res
+      .status(401)
+      .json({ ok: false, msg: 'Could not refresh access token' });
+  }
 
-//   const session = await findSessionById(decoded.session);
+  const session = await findSessionById(decoded.session);
 
-//   if (!session || !session.valid) {
-//     return res.status(401).send('Could not refresh access token');
-//   }
+  if (!session || !session.isValid) {
+    return res
+      .status(401)
+      .json({ ok: false, msg: 'Could not refresh access token' });
+  }
 
-//   const user = await findUserById(String(session.user));
+  const user = await findUserById(String(session.user));
 
-//   if (!user) {
-//     return res.status(401).send('Could not refresh access token');
-//   }
+  if (!user) {
+    return res
+      .status(401)
+      .json({ ok: false, msg: 'Could not refresh access token' });
+  }
 
-//   const accessToken = signAccessToken(user);
+  const accessToken = signAccessToken(user);
 
-//   return res.send({ accessToken });
-// }
+  return res.json({ ok: true, accessToken });
+}
