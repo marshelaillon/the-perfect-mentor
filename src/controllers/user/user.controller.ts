@@ -13,7 +13,7 @@ import {
 import sendEmail from '../../utils/mailer';
 
 export async function createUserController(
-  req: Request<{}, {}, UserRegisterInput>,
+  req: Request<ParamsDictionary, Query, UserRegisterInput>,
   res: Response
 ) {
   const userData = req.body;

@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { ParamsDictionary, Query } from 'express-serve-static-core';
 import { CreateSessionInputSchema } from '../../schema/user/auth.schema';
 import {
   findUserByEmail,
@@ -12,7 +13,7 @@ import {
 import { verifyJwt } from '../../utils/jwt';
 
 export async function createSessionHandler(
-  req: Request<{}, {}, CreateSessionInputSchema>,
+  req: Request<ParamsDictionary, Query, CreateSessionInputSchema>,
   res: Response
 ) {
   const message = 'Invalid email or password';
@@ -46,7 +47,7 @@ export async function refreshAccessTokenHandler(req: Request, res: Response) {
 
   if (refreshToken) {
     decoded = verifyJwt<{ session: string }>(
-      refreshToken + '',
+      String(refreshToken),
       'refreshTokenPublicKey'
     );
   }
