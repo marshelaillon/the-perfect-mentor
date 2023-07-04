@@ -51,7 +51,7 @@ export class User {
   @prop()
   passwordResetCode: string | null;
 
-  @prop({ default: undefined })
+  @prop()
   name: string;
 
   @prop()

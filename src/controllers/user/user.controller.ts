@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { ParamsDictionary, Query } from 'express-serve-static-core';
 import {
   createUser,
+  findUserByEmail,
   findUserById,
   updateUser,
 } from '../../services/user/user.service';
@@ -11,6 +12,10 @@ import {
   VerifyUserInput,
 } from '../../schema/user/user.schema';
 import sendEmail from '../../utils/mailer';
+import {
+  signAccessToken,
+  signRefreshToken,
+} from '../../services/user/auth.service';
 
 export async function createUserController(
   req: Request<ParamsDictionary, Query, UserRegisterInput>,
@@ -79,14 +84,26 @@ export async function updateUserController(
 ) {
   const userData = req.body;
   const { id } = req.params;
+
   try {
     const updatedUser = await updateUser(id, userData);
+    console.log('updated: ', updatedUser);
 
     if (updatedUser) {
-      return res.json({
-        ok: true,
-        msg: 'User successfully updated',
-      });
+      const user = await findUserByEmail(updatedUser.email);
+      if (user) {
+        const accessToken = signAccessToken(user);
+        const refreshToken = await signRefreshToken({
+          userId: String(user._id),
+        });
+
+        return res.json({
+          ok: true,
+          msg: 'User successfully updated',
+          accessToken,
+          refreshToken,
+        });
+      }
     }
 
     return res.status(400).json({ ok: false, msg: 'Something went wrong' });
