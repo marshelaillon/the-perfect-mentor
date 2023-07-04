@@ -26,7 +26,7 @@ export function signAccessToken(user: DocumentType<User>) {
   const payload = omit(user.toJSON(), privateFields);
   //console.log('payload', payload);
   const accessToken = signJwt(payload, 'accessTokenPrivateKey', {
-    expiresIn: '1min',
+    expiresIn: '30min',
   });
   return accessToken;
 }

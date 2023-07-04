@@ -68,7 +68,7 @@ export const updateUserDataSchema = object({
     name: string().nonempty().optional(),
     lastname: string().nonempty().optional(),
     role: string()
-      .nonempty('Role id field cannot be empty')
+      .nonempty('Age field cannot be empty')
       .refine(isValidRoleId, {
         message: 'Invalid role id',
       })
