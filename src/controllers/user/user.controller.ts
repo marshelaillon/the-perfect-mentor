@@ -16,6 +16,8 @@ import {
   signAccessToken,
   signRefreshToken,
 } from '../../services/user/auth.service';
+import { omit } from 'lodash';
+import { privateFields } from '../../models/user/User.model';
 
 export async function createUserController(
   req: Request<ParamsDictionary, Query, UserRegisterInput>,
@@ -87,7 +89,6 @@ export async function updateUserController(
 
   try {
     const updatedUser = await updateUser(id, userData);
-    console.log('updated: ', updatedUser);
 
     if (updatedUser) {
       const user = await findUserByEmail(updatedUser.email);
@@ -100,6 +101,7 @@ export async function updateUserController(
         return res.json({
           ok: true,
           msg: 'User successfully updated',
+          user: omit(user.toJSON(), privateFields),
           accessToken,
           refreshToken,
         });
