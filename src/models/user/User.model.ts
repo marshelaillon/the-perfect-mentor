@@ -77,8 +77,6 @@ export class User {
 
   async validatePassword(this: DocumentType<User>, candidatePassword: string) {
     try {
-      console.log(this.password);
-      console.log(candidatePassword);
       return await argon2.verify(this.password, candidatePassword);
     } catch (error) {
       console.log((error as Error).message, 'Could not validate password');
