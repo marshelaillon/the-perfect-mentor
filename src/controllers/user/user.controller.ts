@@ -28,7 +28,7 @@ export async function createUserController(
     const user = await createUser(userData);
 
     if (user) {
-      const verificationUrl = `http://localhost:3001/api/v1/user/verify/${user._id}/${user.verificationCode}`;
+      const verificationUrl = `https://the-perfect-mentor-api.onrender.com/api/v1/user/verify/${user._id}/${user.verificationCode}`;
 
       const url = await sendEmail({
         from: 'test@example.com',
