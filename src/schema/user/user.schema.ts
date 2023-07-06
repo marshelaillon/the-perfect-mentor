@@ -1,4 +1,4 @@
-import { object, string, TypeOf } from 'zod';
+import { array, object, string, TypeOf } from 'zod';
 import { Types } from 'mongoose';
 
 const roles = [
@@ -77,7 +77,10 @@ export const updateUserDataSchema = object({
     residence_country: string().nonempty().optional(),
     occupation: string().nonempty().optional(),
     description: string().nonempty().optional(),
-    language: string().nonempty().optional(),
+    languages: array(string())
+      .nonempty('Languages field cannot be empty')
+      .optional(),
+    skills: array(string()).nonempty('Skills field cannot be empty').optional(),
   }),
 });
 

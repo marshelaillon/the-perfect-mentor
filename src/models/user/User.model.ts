@@ -69,8 +69,11 @@ export class User {
   @prop()
   profile_photo: string;
 
-  @prop()
-  language: string;
+  @prop({ type: () => [String] })
+  skills: string[];
+
+  @prop({ type: () => [String] })
+  languages: string[];
 
   @prop({ ref: () => Role })
   role: Ref<Role>;
